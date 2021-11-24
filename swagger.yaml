@@ -1,0 +1,2356 @@
+openapi: 3.0.1
+info:
+  title: Policy Intelligence Platform APIs
+  description: APIs showcasing different capabilities of the Policy Intelligence Platform on Intelligent Search, Policy Language Analysis and Digital Contracts
+  version: 1.0.0
+servers:
+  - url: https://pip-services-dev.azurewebsites.net
+    description: Development Endpoint
+  - url: http://localhost
+    description: For local testing purposes
+basepath: /
+components:
+  schemas:
+    lob:
+      type: array
+      items:
+        type: string
+        enum:
+        - casualty
+        - financial
+        - fire
+        - environmental
+        - construction
+        - power
+        - terrorism
+        - marine
+    traceBaseWordings:
+      type: object
+      properties:
+        refCode:
+          type: string
+          enum:
+            - PDBI 01/01/2020
+    baseWordings:
+      type: object
+      properties:
+        country:
+          type: string
+          enum:
+            - GB
+            - US
+        lob:
+          type: string
+          enum:
+            - casualty
+            - financial
+            - fire
+            - environmental
+            - construction
+            - power
+            - terrorism
+            - marine
+        startDate:
+          type: string
+          enum:
+            - 01/01/2020
+        endDate:
+          type: string
+          enum:
+            - 01/01/2021
+        docType:
+          type: string
+          enum:
+            - Bespoke Wording
+            - Broker Wording
+            - Chubb Standard Wording
+            - Industry Standard Wording
+            - Other Carrier Wording
+        sublob:
+          type: string
+          enum:
+            - all risks
+            - named perils
+            - cecr
+            - primary-combined casualty
+        usage:
+          type: string
+        segment:
+          type: string
+        version:
+          type: string
+        language:
+          type: string
+        sublob:
+          type: string
+          enum:
+            - all risks
+            - named perils
+            - cecr
+            - primary-combined casualty
+    iso-country:
+      type: array
+      items:
+        type: string
+        enum:
+        - GB
+        - US
+    country:
+      type: array
+      items:
+        type: string
+        enum:
+        - australia
+        - new zealand
+        - singapore
+        - uk
+        - chile
+    sub_type:
+      type: array
+      items:
+        type: string
+        enum:
+        - base wording
+        - endorsement
+    section:
+      type: array
+      items:
+        type: string
+        enum:
+        - covered sections
+        - condition
+        - exclusion
+        - definition
+        - extension
+        - all
+    doc_collection:
+      type: array
+      items:
+        type: string
+        enum:
+        - Bespoke Wording
+        - Broker Wording
+        - Chubb Standard Wording
+        - Industry Standard Wording
+        - Other Carrier Wording
+    wordings:
+      type: string
+      enum:
+      - wordings
+      - documents
+    language:
+      type: string
+      enum:
+      - english
+      - spanish
+    language-iso:
+      type: string
+      enum:
+      - en
+      - es
+    search:
+      type: object
+      properties:
+        query:
+          type: array
+          items:
+            type: object
+            properties:
+              searchInput:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    input:
+                      type: string
+                    checked:
+                      type: boolean
+              checked:
+                type: boolean
+        queryString:
+          type: string
+        lob:
+          type: array
+          items:
+            type: string
+        sublob:
+          type: array
+          items:
+            type: string
+        documentType:
+          type: array
+          items:
+            type: string
+        country:
+          type: string
+        language:
+          type: string
+        fromDate:
+          type: string
+        toDate:
+          type: string
+        section:
+          type: array
+          items:
+            type: string
+        substituteDefinition:
+          type: boolean
+        expandedSearch:
+          type: boolean
+    markupHTML:
+      type: object
+      properties:
+        title:
+          type: string
+          enum:
+            - Policy123Dec.pdf
+        refCode:
+          type: string
+          enum:
+            - PDBI 01/01/2020
+    markup:
+      type: object
+      properties:
+        name:
+          type: string
+        lob:
+          type: array
+          items:
+            type: string
+        sublob:
+          type: array
+          items:
+            type: string
+        highlightPhrases:
+          type: array
+          items:
+            type: string
+        phraseDefinitions:
+          type: array
+          items:
+            type: string
+        country:
+          type: string
+        section:
+          type: string
+        phrases:
+          type: array
+          items:
+            type: string
+        pageNum:
+          type: string
+  securitySchemes:
+    basicAuth:
+      type: http
+      scheme: basic
+paths:
+  /search:
+    post:
+      tags:
+      - Search (Old)
+      summary: search engine.
+      parameters:
+      - name: search_string
+        in: query
+        description: search string
+        required: true
+        schema:
+          type: string
+      - name: lob
+        in: query
+        description: Line of Business
+        required: true
+        schema:
+          default: casualty
+          $ref: '#/components/schemas/LOB'
+      - name: country
+        in: query
+        description: Country
+        required: true
+        schema:
+          default: australia
+          $ref: '#/components/schemas/country'
+        style: form
+        explode: false
+
+      - name: type_of_doc
+        in: query
+        description: type
+        required: true
+        schema:
+          default: wordings
+          $ref: '#/components/schemas/wordings'
+      - name: language
+        in: query
+        description: language
+        required: true
+        schema:
+          default: english
+          $ref: '#/components/schemas/language'
+      - name: user
+        in: query
+        required: true
+        schema:
+          type: string
+          default: mathew
+      - name: doc_collection
+        in: query
+        schema:
+            $ref: '#/components/schemas/doc_collection'
+      - name: sub_type
+        in: query
+        schema:
+            $ref: '#/components/schemas/sub_type'
+        style: form
+        explode: false
+      - name: section
+        in: query
+        schema:
+            $ref: '#/components/schemas/section'
+        style: form
+        explode: false
+      - name: def_sub_search
+        in: query
+        required: true
+        schema:
+          type: boolean
+          default: false
+      - name: word_proximity_limit
+        in: query
+        required: true
+        schema:
+          type: integer
+          default: 50
+      requestBody:
+        description: search body.
+        content:
+          application/json:
+            schema:
+              type: object
+        required: false
+      responses:
+        200:
+          description: ok
+          content: {}
+      x-codegen-request-body-name: post body
+  /retrieve_result_save_search:
+    post:
+      tags:
+      - Search (Old)
+      summary: open pdf in the after search
+      parameters:
+      - name: lob
+        in: query
+        description: Line of Business
+        required: true
+        schema:
+          default: casualty
+          $ref: '#/components/schemas/LOB'
+      - name: country
+        in: query
+        description: Country
+        required: true
+        schema:
+          type: string
+          default: australia
+          enum:
+          - australia
+          - new zealand
+          - singapore
+          - uk
+          - chile
+      - name: user_id
+        in: query
+        required: true
+        schema:
+          type: string
+          default: f0744cfb-9a49-415b-9bea-3581ec176e82
+      - name: doc_name
+        in: query
+        description: Document Name
+        required: true
+        schema:
+          type: string
+      - name: word_proximity_limit
+        in: query
+        description: word_proximity_limit
+        required: true
+
+        schema:
+          type: string
+          default: 50
+
+      - name: type_of_doc
+        in: query
+        description: type_of_doc
+        required: true
+        schema:
+          type: string
+          default: wordings
+          $ref: '#/components/schemas/wordings'
+        style: form
+        explode: false
+      - name: doc_collection
+        in: query
+        required: true
+        schema:
+            $ref: '#/components/schemas/doc_collection'
+      - name: pagenum
+        in: query
+        description: pagenum
+        required: true
+        schema:
+          type: string
+      requestBody:
+        description: retrive result body.
+        content:
+          application/json:
+            schema:
+              type: object
+        required: true
+      responses:
+        200:
+          description: OK
+          content: {}
+      x-codegen-request-body-name: body
+  /save_search:
+    post:
+      tags:
+      - Search (Old)
+      summary: Save  Search.
+
+      parameters:
+      - name: lob
+        in: query
+        required: true
+        description: Line of Business
+        schema:
+          default: casualty
+          $ref: '#/components/schemas/LOB'
+      - name: country
+        in: query
+        description: Country
+        required: true
+        schema:
+            $ref: '#/components/schemas/country'
+        style: form
+        explode: false
+      - name: type_of_doc
+        in: query
+        description: type
+        required: true
+        schema:
+          default: wordings
+          $ref: '#/components/schemas/wordings'
+        style: form
+        explode: false
+      - name: search_string
+        in: query
+        description: search_string
+        required: true
+        schema:
+          type: string
+      - name: def_sub_search
+        in: query
+        description: def_sub_search
+        required: true
+        schema:
+          type: string
+          default: "false"
+      - name: section
+        in: query
+        description: section
+        required: true
+        schema:
+            $ref: '#/components/schemas/section'
+        style: form
+        explode: false
+
+      - name: sub_type
+        in: query
+        description: sub_type
+        required: true
+        schema:
+            $ref: '#/components/schemas/sub_type'
+        style: form
+        explode: false
+      - name: is_expanded
+        in: query
+        description: is_expanded
+        schema:
+          type: string
+          default: "false"
+      - name: save_type
+        in: query
+        description: save_type
+        required: true
+        schema:
+          type: string
+          enum:
+          - standard
+          - criteria
+      - name: doc_collection
+        in: query
+        description: doc_collection
+        schema:
+            $ref: '#/components/schemas/doc_collection'
+      - name: category_id
+        in: query
+        description: category_id
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+      - name: category
+        in: query
+        description: category
+        required: true
+        schema:
+          type: string
+          enum:
+          - General
+          - Coverage Grant
+          - Main definitions
+          - Exclusions
+          - Cover Extensions
+          - Policy Conditions
+          - Regulatory Requirements
+      - name: criteria_name
+        in: query
+        description: criteria_name
+        schema:
+          type: string
+      - name: description
+        in: query
+        description: description
+        required: true
+        schema:
+          type: string
+      - name: language
+        in: query
+        description: language
+        required: true
+        schema:
+          default: english
+          $ref: '#/components/schemas/language'
+      - name: user_id
+        in: query
+        required: true
+        schema:
+          type: string
+          default: 9f4fd176-703e-47a2-b3d2-875d8dcfa640
+      - name: word_proximity_limit
+        in: query
+        schema:
+          type: integer
+          default: 50
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+
+      responses:
+        200:
+          description: OK
+          content: {}
+      x-codegen-request-body-name: post body
+  /update_search:
+    post:
+      tags:
+      - Search (Old)
+      summary: Update Search.
+
+      parameters:
+      - name: lob
+        in: query
+        description: Line of Business
+        schema:
+          default: casualty
+          $ref: '#/components/schemas/LOB'
+        required: true
+      - name: country
+        in: query
+        description: Country
+        required: true
+        schema:
+            $ref: '#/components/schemas/country'
+        style: form
+        explode: false
+      - name: type_of_doc
+        in: query
+        description: type
+        required: true
+        schema:
+          default: wordings
+          $ref: '#/components/schemas/wordings'
+        style: form
+        explode: false
+      - name: search_string
+        in: query
+        description: search_string
+        required: true
+        schema:
+          type: string
+      - name: def_sub_search
+        in: query
+        description: def_sub_search
+        required: true
+        schema:
+          type: string
+          default: "false"
+      - name: section
+        in: query
+        description: section
+        required: true
+        schema:
+            $ref: '#/components/schemas/section'
+        style: form
+        explode: false
+      - name: sub_type
+        in: query
+        description: def_sub_search
+        required: true
+        schema:
+            $ref: '#/components/schemas/sub_type'
+        style: form
+        explode: false
+      - name: is_expanded
+        in: query
+        description: is_expanded
+        schema:
+          type: string
+      - name: save_type
+        in: query
+        description: save_type
+        schema:
+          type: string
+          enum:
+          - standard
+          - criteria
+      - name: parent_key
+        in: query
+        description: parent_key
+        schema:
+          type: string
+        required: true
+      - name: doc_collection
+        in: query
+        description: doc_collection
+        schema:
+            $ref: '#/components/schemas/doc_collection'
+      - name: category_id
+        in: query
+        description: category_id
+        schema:
+          type: integer
+          enum:
+          - 1
+          - 2
+          - 3
+          - 4
+          - 5
+          - 6
+          - 7
+      - name: category
+        in: query
+        description: category
+        schema:
+          type: string
+          enum:
+          - General
+          - Coverage Grant
+          - Main definitions
+          - Exclusions
+          - Cover Extensions
+          - Policy Conditions
+          - Regulatory Requirements
+      - name: criteria_name
+        in: query
+        description: criteria_name
+        schema:
+          type: string
+      - name: description
+        in: query
+        description: description
+        schema:
+          type: string
+        required: true
+      - name: language
+        in: query
+        description: language
+        required: true
+        schema:
+          default: english
+          $ref: '#/components/schemas/language'
+      - name: user_id
+        in: query
+        required: true
+        schema:
+          type: string
+          default: 9f4fd176-703e-47a2-b3d2-875d8dcfa640
+      - name: word_proximity_limit
+        in: query
+        schema:
+          type: integer
+          default: 50
+      requestBody:
+        description: Optional description in *Markdown*
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+
+      responses:
+        200:
+          description: OK
+          content: {}
+      x-codegen-request-body-name: post body
+  /delete_saved_searches:
+    post:
+      tags:
+      - Search (Old)
+      summary: Delete  Search.
+
+      parameters:
+      - name: Parent Key
+        in: query
+        description: Parent Key
+        required: true
+        schema:
+          type: string
+      responses:
+        200:
+          description: OK
+          content: {}
+  /get_categories:
+    get:
+      summary: Returns a list of get_categories.
+      tags:
+      - Search (Old)
+      responses:
+        200:
+          description: OK
+          content: {}
+  /clear_files:
+
+    post:
+      tags:
+      - Search (Old)
+
+      summary: clear_files.
+
+      responses:
+        200:
+          description: OK
+          content: {}
+  /click_tag:
+    get:
+      summary: High light the words in pdf.
+      tags:
+      - Search (Old)
+      parameters:
+      - name: user_id
+        in: query
+        schema:
+          type: string
+          default: 59db7a0a-6dd7-4da8-b749-0b6599661ebd
+      - name: doc_name
+        in: query
+        description: Document Name
+        required: true
+        schema:
+          type: string
+      - name: key_phrase
+        in: query
+        required: true
+        schema:
+          type: string
+      - name: lob
+        in: query
+        description: Line of Business
+        schema:
+            default: casualty
+            $ref: '#/components/schemas/LOB'
+      - name: country
+        in: query
+        schema:
+            $ref: '#/components/schemas/country'
+        style: form
+        explode: false
+      responses:
+        200:
+          description: OK
+          content: {}
+  /get_assessment_report:
+    get:
+      summary: Get Assessment Report.
+      tags:
+      - Search (Old)
+      parameters:
+      - name: lob
+        in: query
+        description: Line of Business
+        schema:
+          default: casualty
+          $ref: '#/components/schemas/LOB'
+      - name: country
+        in: query
+        description: Country
+        required: true
+        schema:
+            $ref: '#/components/schemas/country'
+        style: form
+        explode: false
+      - name: type_of_doc
+        in: query
+        description: type
+        required: true
+        schema:
+          default: wordings
+          $ref: '#/components/schemas/wordings'
+        style: form
+        explode: false
+      - name: language
+        in: query
+        description: language
+        required: true
+        schema:
+          default: english
+          $ref: '#/components/schemas/language'
+      - name: user_id
+        in: query
+        required: true
+        schema:
+          type: string
+          default: 9f4fd176-703e-47a2-b3d2-875d8dcfa640
+      responses:
+        200:
+          description: OK
+          content: {}
+  /view_saved_searches:
+    get:
+      summary: View Saved Results.
+      tags:
+      - Search (Old)
+      parameters:
+      - name: lob
+        in: query
+        description: Line of Business
+        schema:
+          default: casualty
+          $ref: '#/components/schemas/LOB'
+      - name: country
+        in: query
+        description: Country
+        required: true
+        schema:
+            $ref: '#/components/schemas/country'
+        style: form
+        explode: false
+      - name: user_id
+        in: query
+        required: true
+        schema:
+          type: string
+          default: 9f4fd176-703e-47a2-b3d2-875d8dcfa640
+      - name: language
+        in: query
+        description: language
+        required: true
+        schema:
+          default: english
+          $ref: '#/components/schemas/language'
+      responses:
+        200:
+          description: OK
+          content: {}
+  /saved_search_execution:
+    summary: After saving search we should execute saved_search_execution to be visible in Assesment Report.
+    get:
+      tags:
+      - Search (Old)
+      parameters:
+      - name: lob
+        in: query
+        required: true
+        description: Line of Business
+        schema:
+          default: casualty
+          $ref: '#/components/schemas/LOB'
+      - name: user_id
+        in: query
+        required: true
+        schema:
+          type: string
+          default: mathew
+      - name: type_of_doc
+        in: query
+        description: type
+        required: true
+        schema:
+          default: wordings
+          $ref: '#/components/schemas/wordings'
+        style: form
+        explode: false
+      responses:
+        200:
+          description: OK
+          content: {}
+  /markup/document:
+    description: API to return a documented with added search specfic data.
+    post:
+      security:
+        - basicAuth: []
+      tags:
+      - Markup
+      requestBody:
+        description: The object that contains all of the parameters of the markup schema.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/markup'
+      responses:
+        200:
+          description: The raw contents of a PDF file.
+          content:
+            application/json:
+              schema:
+                type: file
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /trace/download:
+    get:
+      security:
+        basicAuth: []
+      description: API to reutrn the policy documents or the policy base wordings in pdf form.
+      tags:
+        - Trace
+      parameters:
+        - name: title
+          in: query
+          required: true
+          description: The document title for the policy document or base wording's document
+          schema:
+            type: string
+            default: MasterPackage Multinational-UK-2019 (Limit of Loss S 1 & 2)-SPECIMEN-(to 31-12-2020).pdf
+        - name: docType
+          in: query
+          required: true
+          description: to determine what kind of response the API returns. Either policy documents or base wordings.
+          schema:
+            type: string
+            enum:
+              - wording
+              - policy
+        - name: country
+          in: query
+          required: true
+          description: "The ISO 3166-1 standard of country codes."
+          schema:
+            type: string
+            default: GB
+        - name: lob
+          in: query
+          required: true
+          description: The line of business
+          schema:
+            type: string
+            default: Fire
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/pdf:
+              schema:
+                type: binary
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /trace/endorsements/download:
+    get:
+      security:
+        basicAuth: []
+      description: API to reutrn the endorsements or policy documents.
+      tags:
+        - Trace
+      parameters:
+        - name: title
+          in: query
+          required: true
+          description: The document title for the policy document or endorsement
+          schema:
+            type: string
+            default: MasterPackage Multinational-UK-2019 (Limit of Loss S 1 & 2)-SPECIMEN-(to 31-12-2020).pdf
+        - name: docType
+          in: query
+          required: true
+          description: to determine what kind of response the API returns. Either policy documents or endorsements.
+          schema:
+            type: string
+            enum:
+              - endorsement
+              - policy
+        - name: country
+          in: query
+          required: true
+          description: "The ISO 3166-1 standard of country codes."
+          schema:
+            type: string
+            default: GB
+        - name: lob
+          in: query
+          required: true
+          description: The line of business
+          schema:
+            type: string
+            default: Fire
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/pdf:
+              schema:
+                type: binary
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+
+  /trace/markup:
+    get:
+      security:
+        basicAuth: []
+      description: API to return an HTML string that shows the user a document marked with traced base wordings
+      tags:
+        - Trace
+      parameters:
+        - name: refCode
+          in: query
+          required: true
+          description: The document reference code
+          schema:
+            type: string
+            default: PDBI 01/01/2020
+        - name: id
+          in: query
+          required: true
+          description: The id for the document
+          schema:
+            type: string
+            default: Chubb Policy PDF
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  "result": {
+                    "title": "DocumentTitle",
+                    "id": "DocumentID",
+                    "section": [{
+                      "section": "categorySection",
+                      "htmlString": "HTML String of section",
+                      "sectionType": "SectionType",
+                      "matchType": "matchType"
+                      }]
+                    }
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /trace/markup/endorsement:
+    get:
+      security:
+        basicAuth: []
+      description: API to return the trace of an endorsement
+      tags:
+        - Trace
+      parameters:
+        - name: refCode
+          in: query
+          required: true
+          description: The document reference code
+          schema:
+            type: string
+            default: PDBI 01/01/2020
+        - name: id
+          in: query
+          required: true
+          description: The id for the document
+          schema:
+            type: string
+            default: Chubb Policy PDF
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example:
+                  "result": {
+                    "title": "DocumentTitle",
+                    "id": "DocumentID",
+                    "clauseRefCode": "clauseRefCode",
+                    "section": [{
+                      "section": "categorySection",
+                      "htmlString": "HTML String of section",
+                      "sectionType": "SectionType",
+                      "matchType": "matchType"
+                      }]
+                    }
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /trace/analytics:
+    get:
+      security:
+        basicAuth: []
+      description: API to return analytics on the various counties and Line of Business
+      tags:
+        - Trace
+      parameters:
+        - name: country
+          in: query
+          required: true
+          description: "The country of origin of the request."
+          schema:
+            type: string
+            default: GB
+        - name: lob
+          in: query
+          required: true
+          description: "The line of business of the request."
+          schema:
+            type: string
+            default: fire
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/json:
+              schema:
+                type: object
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /trace/analytics/endorsements:
+    get:
+      security:
+        basicAuth: []
+      description: API to return analytics based on endorsements
+      tags:
+        - Trace
+      parameters:
+        - name: country
+          in: query
+          required: true
+          description: "The country of origin of the request."
+          schema:
+            type: string
+            default: GB
+        - name: lob
+          in: query
+          required: true
+          description: "The line of business of the request."
+          schema:
+            type: string
+            default: fire
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "batchTime": "2021-04-01 14:13:42",
+                  "full": {
+                    "total": 104
+                  },
+                  "noMatch": {
+                    "section": {
+                      "conditions": 38,
+                      "covered": 38,
+                      "definitions": 39,
+                      "exclusions": 39,
+                      "extensions": 6,
+                      "endorsements": 7,
+                      "miscellaneous": 0
+                    },
+                    "total": 41
+                    },
+                  "partial": {
+                    "relevance": {
+                      "high": 14,
+                      "low": 4,
+                      "medium": 7
+                    },
+                    "section": {
+                      "conditions": 4,
+                      "covered": 0,
+                      "definitions": 4,
+                      "exclusions": 6,
+                      "extensions": 8,
+                      "endorsements": 6,
+                      "miscellaneous": 17
+                    },
+                    "total": 25
+                  },
+                  "refCodes": {
+                    "MN MasterPackage 2019": {
+                      "count": 5,
+                      "wordingTitle": "MasterPackage Multinational-UK-2019 (Limit of Loss S 1 & 2)-SPECIMEN-(to 31-12-2020)"
+                    }
+                  },
+                  "endorsementWordings": {
+                    "endorsementWording": {
+                      "count": 1
+                      }
+                    },
+                  "total": 170
+                }
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /trace/bubbleChart:
+    get:
+      security:
+        basicAuth: []
+      description: API to return the values for each line of business and country
+      tags:
+        - Trace
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/json:
+              schema:
+                type: object
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /trace/endorsements/bubbleChart:
+    get:
+      security:
+        basicAuth: []
+      description: API to return the values for each line of business and country
+      tags:
+        - Trace
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/json:
+              schema:
+                type: object
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /trace/search/endorsements:
+    get:
+      security:
+        basicAuth: []
+      description: API to return a list of endorsements
+      tags:
+        - Trace
+      parameters:
+        - name: lob
+          in: query
+          required: true
+          description: The Line of Business for the endorsement
+          schema:
+            type: string
+            enum:
+              - casualty
+              - financial
+              - fire
+              - environmental
+              - construction
+              - power
+              - terrorism
+              - marine
+        - name: country
+          in: query
+          required: true
+          description: The ISO 3166-1 standard of country codes.
+          schema:
+            type: string
+            default: GB
+        - name: startDate
+          in: query
+          description: The start date being used for the search
+          schema:
+            type: string
+            default: "2018-04-01"
+        - name: endDate
+          in: query
+          description: The end date being used for the search
+          schema:
+            type: string
+            default: "2019-04-01"
+        - name: query
+          in: query
+          description: The string used for text searching the endorsement
+          schema:
+            type: string
+        - name: clauseRefCode
+          in: query
+          description: The clause reference code
+          schema:
+            type: string
+        - name: wordingType
+          in: query
+          description: The wording type for the endorsement request
+          schema:
+            type: string
+            enum:
+              - Chubb Standard Policy Endorsements
+              - Broker Policy Endorsements
+              - Other Carrier Endorsements
+              - Bespoke Policy Wordings Endorsements
+              - Industry Standard Endorsements
+        - name: wordingRefCode
+          in: query
+          description: The wording reference code for the endorsement
+          schema:
+            type: string
+            enum:
+              - Multinational PDBI 05/2017
+              - Multinational PDBI 04/2018 (SE)
+              - PDBI 04/2018
+              - MN MasterPackage 2019
+              - PDBI 04/2018 (SE)
+        - name: sublob
+          in: query
+          description: The sub Line of Business for the endorsement
+          schema:
+            type: string
+            enum:
+              - All risks
+              - Named Perils
+              - cecr
+              - Primary-Combined Casualty
+        - name: segment
+          in: query
+          schema:
+            type: string
+        - name: version
+          in: query
+          schema:
+            type: string
+        - name: language
+          in: query
+          description: "The ISO-639-1 standard for languages"
+          schema:
+            type: string
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "filters": {
+                    "country": "GB",
+                    "docType": "null",
+                    "startDate": "2020-01-01",
+                    "endDate": "2021-01-01",
+                    "query": "Endorsement search query",
+                    "language": "null",
+                    "sublob": "null",
+                    "lob": "fire",
+                    "usage": "null",
+                    "segment": "null"
+                    },
+                  "results": [{
+                    "title": "Chubb Midmarket Liability Policy Wording (Chubb02-125-0218)",
+                    "clauseRefCode": EndorsementClauseRefCode
+                  }],
+                  "wordingRefCodes": []
+                }
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /trace/results/endorsements:
+    get:
+      security:
+        basicAuth: []
+      description: API to return a list of documents that apply to the selected filters
+      tags:
+        - Trace
+      parameters:
+        - name: refCode
+          in: query
+          description: The Reference Code for the endorsement
+          schema:
+            type: string
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {
+                    "abstract": {
+                        "full": {
+                            "total": 75
+                        },
+                        "partial": {
+                            "section": {
+                                "covered": {
+                                    "relevance": {
+                                        "low": {
+                                            "total": 0
+                                        },
+                                        "medium": {
+                                            "total": 0
+                                        },
+                                        "high": {
+                                            "total": 0
+                                        }
+                                    },
+                                    "total": 0
+                                },
+                                "exclusions": {
+                                    "relevance": {
+                                        "low": {
+                                            "total": 0
+                                        },
+                                        "medium": {
+                                            "total": 0
+                                        },
+                                        "high": {
+                                            "total": 0
+                                        }
+                                    },
+                                    "total": 0
+                                },
+                                "conditions": {
+                                    "relevance": {
+                                        "low": {
+                                            "total": 0
+                                        },
+                                        "medium": {
+                                            "total": 0
+                                        },
+                                        "high": {
+                                            "total": 0
+                                        }
+                                    },
+                                    "total": 0
+                                },
+                                "extensions": {
+                                    "relevance": {
+                                        "low": {
+                                            "total": 0
+                                        },
+                                        "medium": {
+                                            "total": 0
+                                        },
+                                        "high": {
+                                            "total": 0
+                                        }
+                                    },
+                                    "total": 0
+                                },
+                                "definitions": {
+                                    "relevance": {
+                                        "low": {
+                                            "total": 0
+                                        },
+                                        "medium": {
+                                            "total": 0
+                                        },
+                                        "high": {
+                                            "total": 0
+                                        }
+                                    },
+                                    "total": 0
+                                },
+                                "endorsements": {
+                                    "relevance": {
+                                        "low": {
+                                            "total": 0
+                                        },
+                                        "medium": {
+                                            "total": 0
+                                        },
+                                        "high": {
+                                            "total": 0
+                                        }
+                                    },
+                                    "total": 0
+                                },
+                                "miscellaneous": {
+                                    "relevance": {
+                                        "low": {
+                                            "total": 0
+                                        },
+                                        "medium": {
+                                            "total": 1
+                                        },
+                                        "high": {
+                                            "total": 0
+                                        }
+                                    },
+                                    "total": 1
+                                }
+                            },
+                            "relevance": {
+                                "low": {
+                                    "covered": {
+                                        "total": 0
+                                    },
+                                    "exclusions": {
+                                        "total": 0
+                                    },
+                                    "conditions": {
+                                        "total": 0
+                                    },
+                                    "extensions": {
+                                        "total": 0
+                                    },
+                                    "definitions": {
+                                        "total": 0
+                                    },
+                                    "endorsements": {
+                                        "total": 0
+                                    },
+                                    "miscellaneous": {
+                                        "total": 0
+                                    },
+                                    "total": 0
+                                },
+                                "medium": {
+                                    "covered": {
+                                        "total": 0
+                                    },
+                                    "exclusions": {
+                                        "total": 0
+                                    },
+                                    "conditions": {
+                                        "total": 0
+                                    },
+                                    "extensions": {
+                                        "total": 0
+                                    },
+                                    "definitions": {
+                                        "total": 0
+                                    },
+                                    "endorsements": {
+                                        "total": 0
+                                    },
+                                    "miscellaneous": {
+                                        "total": 1
+                                    },
+                                    "total": 1
+                                },
+                                "high": {
+                                    "covered": {
+                                        "total": 0
+                                    },
+                                    "exclusions": {
+                                        "total": 0
+                                    },
+                                    "conditions": {
+                                        "total": 0
+                                    },
+                                    "extensions": {
+                                        "total": 0
+                                    },
+                                    "definitions": {
+                                        "total": 0
+                                    },
+                                    "endorsements": {
+                                        "total": 0
+                                    },
+                                    "miscellaneous": {
+                                        "total": 0
+                                    },
+                                    "total": 0
+                                }
+                            },
+                            "total": 1
+                        },
+                        "no": {
+                            "section": {
+                                "covered": {
+                                    "total": 0
+                                },
+                                "exclusions": {
+                                    "total": 0
+                                },
+                                "conditions": {
+                                    "total": 0
+                                },
+                                "extensions": {
+                                    "total": 0
+                                },
+                                "definitions": {
+                                    "total": 0
+                                },
+                                "endorsements": {
+                                    "total": 0
+                                },
+                                "miscellaneous": {
+                                    "total": 0
+                                }
+                            },
+                            "total": 0
+                        },
+                        "total": 4
+                    },
+                    "results": [{
+                        "policyDetails": {
+                            "policyNo": "98107865",
+                            "expiryDate": "2021-10-30",
+                            "effectiveDate": "2020-10-30"
+                        },
+                        "title": "Chubb Midmarket Liability Policy Wording (Chubb02-125-0218)",
+                        "id": "Chubb PDBI - UK - 04-2018 (SE - from 01-01-2019 to 31-12-20) - SPECIMENREDACTED_B3934012-921B-4D9B-8775-6E4112413588",
+                        "matchType": "partial",
+                        "relevance": "High",
+                        "refCode": "PDBI 01/01/2020",
+                        "matches": {
+                            "covered": {
+                                "matchType": "full",
+                                "relevance": "",
+                                "total": 0
+                            },
+                            "exclusions": {
+                                "matchType": "full",
+                                "relevance": "",
+                                "total": 0
+                            },
+                            "conditions": {
+                                "matchType": "full",
+                                "relevance": "",
+                                "total": 0
+                            },
+                            "extensions": {
+                                "matchType": "full",
+                                "relevance": "",
+                                "total": 0
+                            },
+                            "definitions": {
+                                "matchType": "full",
+                                "relevance": "",
+                                "total": 0
+                            },
+                            "endorsements": {
+                                "matchType": "full",
+                                "relevance": "",
+                                "total": 0
+                            },
+                            "miscellaneous": {
+                                "matchType": "partial",
+                                "relevance": "medium",
+                                "total": 1
+                            }
+                        }
+                    }]
+                }
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /trace/results/basewordings:
+    get:
+      security:
+        basicAuth: []
+      description: API to return a list of templates to search for.
+      tags:
+        - Trace
+      parameters:
+        - name: refCode
+          in: query
+          required: true
+          description: "The document reference code"
+          schema:
+            type: string
+            default: PDBI 01/01/2020
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {
+                "abstract": {
+                  "full": {
+                    "total": 75
+                    },
+                  "partial": {
+                    "section": {
+                      "covered": {
+                        "relevance": {
+                          "low": {
+                            "total": 0
+                          },
+                          "medium": {
+                            "total": 0
+                          },
+                          "high": {
+                            "total": 0
+                          }
+                        },
+                        "total": 0
+                      },
+                      "exclusions": {
+                        "relevance": {
+                          "low": {
+                            "total": 0
+                          },
+                          "medium": {
+                            "total": 0
+                          },
+                          "high": {
+                            "total": 0
+                          }
+                        },
+                        "total": 0
+                      },
+                      "conditions": {
+                        "relevance": {
+                          "low": {
+                            "total": 0
+                          },
+                          "medium": {
+                            "total": 0
+                          },
+                          "high": {
+                            "total": 0
+                          }
+                        },
+                        "total": 0
+                      },
+                      "extensions": {
+                        "relevance": {
+                          "low": {
+                            "total": 0
+                          },
+                          "medium": {
+                            "total": 0
+                          },
+                          "high": {
+                            "total": 0
+                          }
+                        },
+                        "total": 0
+                      },
+                      "definitions": {
+                        "relevance": {
+                          "low": {
+                            "total": 0
+                          },
+                          "medium": {
+                            "total": 0
+                          },
+                          "high": {
+                            "total": 0
+                          }
+                        },
+                        "total": 0
+                      },
+                      "miscellaneous": {
+                        "relevance": {
+                          "low": {
+                            "total": 0
+                          },
+                          "medium": {
+                            "total": 1
+                          },
+                          "high": {
+                            "total": 0
+                          }
+                        },
+                        "total": 1
+                      }
+                    },
+                    "relevance": {
+                      "low": {
+                        "covered": {
+                          "total": 0
+                        },
+                        "exclusions": {
+                          "total": 0
+                        },
+                        "conditions": {
+                          "total": 0
+                        },
+                        "extensions": {
+                          "total": 0
+                        },
+                        "definitions": {
+                          "total": 0
+                        },
+                        "miscellaneous": {
+                          "total": 0
+                        },
+                        "total": 0
+                      },
+                      "medium": {
+                        "covered": {
+                          "total": 0
+                        },
+                        "exclusions": {
+                          "total": 0
+                        },
+                        "conditions": {
+                          "total": 0
+                        },
+                        "extensions": {
+                          "total": 0
+                        },
+                        "definitions": {
+                          "total": 0
+                        },
+                        "miscellaneous": {
+                          "total": 1
+                        },
+                        "total": 1
+                      },
+                      "high": {
+                        "covered": {
+                          "total": 0
+                        },
+                        "exclusions": {
+                          "total": 0
+                        },
+                        "conditions": {
+                          "total": 0
+                        },
+                        "extensions": {
+                          "total": 0
+                        },
+                        "definitions": {
+                          "total": 0
+                        },
+                        "miscellaneous": {
+                          "total": 0
+                        },
+                        "total": 0
+                      }
+                    },
+                    "total": 1
+                  },
+                  "no": {
+                    "section": {
+                      "covered": {
+                        "total": 0
+                      },
+                      "exclusions": {
+                        "total": 0
+                      },
+                      "conditions": {
+                        "total": 0
+                      },
+                      "extensions": {
+                        "total": 0
+                      },
+                      "definitions": {
+                        "total": 0
+                      },
+                      "miscellaneous": {
+                        "total": 0
+                      }
+                    },
+                    "total": 0
+                  },
+                  "total": 4
+                },
+                "results": [{
+                  "policyDetails": {
+                    "policyNo": "98107865",
+                    "expiryDate": "2021-10-30",
+                    "effectiveDate": "2020-10-30"
+                  },
+                  "title": "Chubb Midmarket Liability Policy Wording (Chubb02-125-0218)",
+                  "id": "Chubb PDBI - UK - 04-2018 (SE - from 01-01-2019 to 31-12-20) - SPECIMENREDACTED_B3934012-921B-4D9B-8775-6E4112413588",
+                  "matchType": "partial",
+                  "relevance": "High",
+                  "clauseRefCode": "clauseRefCode",
+                  "wordingRefCode": "PDBI 01/01/2020",
+                  "matches": {
+                    "covered": {
+                      "matchType": "full",
+                      "relevance": "",
+                      "total": 0
+                    },
+                    "exclusions": {
+                      "matchType": "full",
+                      "relevance": "",
+                      "total": 0
+                    },
+                    "conditions": {
+                      "matchType": "full",
+                      "relevance": "",
+                      "total": 0
+                    },
+                    "extensions": {
+                      "matchType": "full",
+                      "relevance": "",
+                      "total": 0
+                    },
+                    "definitions": {
+                      "matchType": "full",
+                      "relevance": "",
+                      "total": 0
+                    },
+                    "miscellaneous": {
+                      "matchType": "partial",
+                      "relevance": "medium",
+                      "total": 1
+                    }
+                  }
+                }]
+              }
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /trace/search/basewordings:
+    get:
+      security:
+        basicAuth: []
+      description: API to search on base wordings in policy documents and returns JSON of search results
+      tags:
+        - Trace
+      parameters:
+        - name: country
+          in: query
+          required: true
+          description: "The ISO 3166-1 standard of country codes."
+          schema:
+            type: string
+            default: GB
+        - name: startDate
+          in: query
+          required: true
+          description: "The start date for policy search."
+          schema:
+            type: string
+            default: "2020-01-30"
+        - name: endDate
+          in: query
+          description: "The end date for policy search."
+          schema:
+            type: string
+        - name: lob
+          in: query
+          required: true
+          description: "The line of business."
+          schema:
+            type: string
+            default: fire
+        - name: docType
+          in: query
+          description: "The document type of the document."
+          schema:
+            type: string
+        - name: sublob
+          in: query
+          description: "The sub line of business for the policy"
+          schema:
+            type: string
+        - name: usage
+          in: query
+          schema:
+            type: string
+        - name: segment
+          in: query
+          schema:
+            type: string
+        - name: language
+          in: query
+          description: "The ISO-639-1 standard for languages"
+          schema:
+            type: string
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/json:
+              schema:
+                type: object
+                example: {
+                  "filters": {
+                    "country": "GB",
+                    "docType": "null",
+                    "startDate": "2020-01-01",
+                    "endDate": "2021-01-01",
+                    "language": "null",
+                    "sublob": "null",
+                    "lob": "fire",
+                    "usage": "null",
+                    "segment": "null"
+                    },
+                  "results": [{
+                    "title": "Chubb Midmarket Liability Policy Wording (Chubb02-125-0218)",
+                    "refCode": "PDBI 01/01/2020"
+                  }]
+                }
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+  /search/documents:
+    post:
+      security:
+        - basicAuth: []
+      description: API to search policy documents and retrieve search results.
+      tags:
+      - Search
+      requestBody:
+          description: The body of the request that contains all of the search parameters in the Search schema.
+          required: true
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/search'
+      responses:
+        200:
+          description: 200 Success
+          content:
+            application/json:
+              schema:
+                type: object
+              example: {
+  "abstract": {
+    "total": 150,
+    "full": {
+      "covered": 20,
+      "exclusions": 10,
+      "conditions": 15,
+      "extentions": 10,
+      "definitions": 20,
+      "total": 75
+    },
+    "partial": {
+      "covered": 20,
+      "exclusions": 10,
+      "conditions": 15,
+      "extentions": 10,
+      "definitions": 20,
+      "total": 75
+    }
+  },
+  "results": [
+  {
+  "policyDetails": {
+        "policyNo": "98107865",
+        "expiryDate": "10/22/2020",
+        "effectiveDate": "10/22/2021"
+      },
+      "documentName": "Chubb Midmarket Liability Policy Wording (Chubb02-125-0218)",
+      "matchType": "partial",
+      "relevance": "High",
+      "matchCount": 1,
+      "matches": [
+        {
+          "text": "  5.5   Completed Operations shall mean operations which have been completed or abandoned by the  Insured away from premises owned by or rented to the Insured, including materials, parts or equipment  furnished in connection therewith. Operations which may require further service or ma intenance work  or correction, but which are otherwise complete, shall be deemed to be completed.   5.6  <em>damage<em> shall mean loss of possession of or <em>damage<em> to property including loss of use of such property,  irrespective of whether <em>damage<em> to property has occurred. All such loss of use shall be deemed to have  occurred at the time <em>damage<em> was first incurred.   5.7   Deductible shall mean the amount of deductible as specified in the Policy Schedule.    5.8   Defence  Costs shall mean costs, fees, disbursements and expenses incurred by the Insured with the  written consent of Chubb, such consent not to be unreasonably withheld, in the defence or settlement of  any Claim.   5.9   Documents shall mean deeds, wills, agreements, maps, plans, books, letters, policies, certificates ,  forms and documents of any nature whatsoever, whether written, printed or reproduced by any method  including computer records and electronic data material, but shall not include bearer bonds or coupons,  stamps, bank or currency notes or any other negotiable instrument.    5.10   Employee  shall mean any person employed under a contract of service or apprenticeship during or  prior to the Period of Insurance.    5.11  Government  Enquiry shall mean an official review of events or actions by a government body.   5.12   <em>injury<em> shall mean  bodily <em>injury<em> and/or illness, sickness, <em>disease<em>, disability, shock, stress,  fright, mental <em>injury<em>,  mental anguish or death;  the effects of false or wrongful arrest, false or wrongful imprisonment,  wrongful eviction,  wrongful entry, wrongful detention, wrongful accusation, prosecution, humiliation, harassment  or molestation;  the effects of defamation, trespass or invasion of the right of privacy or of occupancy;   the effects of assault and battery not committed by or at the direction of any of the Persons  Insured unless committed for the purpose of preventing or eliminating danger to persons or  property; or  loss of consortium, loss of servitium and any other loss of support or dependency.     5.13   Insured shall mean  the person, persons or corporate legal entity specified in the Policy Schedule;  all subsidiaries and/or related companies of the Insured including those acquired or established  after inception of the Policy and/or joint venture companies and/or where required under  contract all manufacturers, agents, suppliers, consultants, contractors, subcontractors and  principals and all other interested parties as may be required for their respective rights, interests  and liabilities; or  any past, present or future director, office r, partner or employee of the Insured or its subsidiaries.   5.14  Limits of Liability shall mean   The amount stated in Limits of Liability (a) of the Schedule which is the maximum amount Chubb  shall indemnify the Insured in respect of all Compensation arising out of any one Occurrence.   The amount stated in Limits of Liability (b) of the Schedule which is the maximum aggregate  amount Chubb shall indemnify the Insured in respect of all Compensation for Personal <em>injury<em> or  Property <em>damage<em> first happening during the Policy Period arising out of   the Insured’s Products  or Completed Operations.   The amount stated in Limits of Liability (c) of the Schedule which is the maximum aggregate  amount Chubb shall indemnify the Insured in respect of all Compensation for Advertising <em>injury<em>  first happening during the Policy Period  a)  b)  c)  d)  e)  a)  b)  c)  a)   b)   c)  Chubb  Midmarket Liability Policy Wording,  Australia. Published  05/2019.  ©2019 Chubb  Insurance  Australia Limited.  Chubb®,  its logos, and Chubb.Insured.℠  are protected  trademarks of Chubb.    ",
+           "matchType": "partial",
+          "relevance": "High",
+          "language": "en",
+          "country": "GB",
+          "page": 13,
+          "lob": "casualty",
+          "sublob": "all",
+          "phraseList": [
+            "resultant loss of use",
+            "damage",
+            "injury",
+            "disease"
+          ],
+          "highlightWordsDef": [],
+          "boldPhrases": [
+            "Employee",
+            "Limits of Liability",
+            "Completed Operations",
+            "Insured",
+            "Defence  Costs",
+            "Damage",
+            "Injury",
+            "Deductible",
+            "Documents",
+            "Government  Enquiry"
+          ],
+          "highlightWords": [
+            "loss",
+            "Damage",
+            "Injury",
+            "injury",
+            "use",
+            "disease",
+            "damage"
+          ],
+          "definitionsInPage": [
+            {
+              "name": "Completed Operations",
+              "text": "shall mean operations which have been completed or abandoned by the   Insured away from premises owned by or rented to the Insured, including materials, parts or equipment  furnished in connection therewith  Operations which may require further service or ma intenance work  or correction, but which are otherwise complete, shall be deemed to be completed"
+            },
+            {
+              "name": "Damage",
+              "text": "shall mean loss of possession of or damage to property including loss of use of such property,   irrespective of whether damage to property has occurred  All such loss of use shall be deemed to have  occurred at the time Damage was first incurred"
+            },
+            {
+              "name": "Deductible",
+              "text": "shall mean the amount of deductible as specified in the Policy Schedule"
+            },
+            {
+              "name": "Defence  Costs",
+              "text": "shall mean costs, fees, disbursements and expenses incurred by the Insured with the   written consent of Chubb, such consent not to be unreasonably withheld, in the defence or settlement of  any Claim"
+            },
+            {
+              "name": "Documents",
+              "text": "shall mean deeds, wills, agreements, maps, plans, books, letters, policies, certificates ,   forms and documents of any nature whatsoever, whether written, printed or reproduced by any method  including computer records and electronic data material, but shall not include bearer bonds or coupons,  stamps, bank or currency notes or any other negotiable instrument"
+            },
+            {
+              "name": "Employee",
+              "text": "shall mean any person employed under a contract of service or apprenticeship during or   prior to the Period of Insurance"
+            },
+            {
+              "name": "Government  Enquiry",
+              "text": "shall mean an official review of events or actions by a government body"
+            },
+            {
+              "name": "Injury",
+              "text": "shall mean   bodily injury and/or illness, sickness, disease, disability, shock, stress,  fright, mental injury,  mental anguish or death   the effects of false or wrongful arrest, false or wrongful imprisonment,  wrongful eviction,  wrongful entry, wrongful detention, wrongful accusation, prosecution, humiliation, harassment  or molestation   the effects of defamation, trespass or invasion of the right of privacy or of occupancy    the effects of assault and battery not committed by or at the direction of any of the Persons  Insured unless committed for the purpose of preventing or eliminating danger to persons or  property  or  loss of consortium, loss of servitium and any other loss of support or dependency"
+            },
+            {
+              "name": "Limits of Liability",
+              "text": "shall mean    The amount stated in Limits of Liability  of the Schedule which is the maximum amount Chubb  shall indemnify the Insured in respect of all Compensation arising out of any one Occurrence    The amount stated in Limits of Liability  of the Schedule which is the maximum aggregate  amount Chubb shall indemnify the Insured in respect of all Compensation for Personal Injury or  Property Damage first happening during the Policy Period arising out of   the Insured’s Products  or Completed Operations    The amount stated in Limits of Liability  of the Schedule which is the maximum aggregate  amount Chubb shall indemnify the Insured in respect of all Compensation for Advertising Injury  first happening during the Policy Period              Chubb  Midmarket Liability Policy Wording,  Australia  Published  05/20©2019 Chubb  Insurance  Australia Limited   Chubb®,  its logos, and Chubb Insured ℠  are protected  trademarks of Chubb       13"
+            }
+          ],
+          "score": 98.98648648648648
+        }
+      ]
+    }
+  ]
+}
+        400:
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string
+        500:
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error:
+                    type: string

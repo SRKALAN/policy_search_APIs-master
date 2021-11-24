@@ -1,0 +1,17 @@
+{
+  "cosmo_endpoint": "https://nf-poc-cdb-sql.documents.azure.com",
+  "cosmo_key": "iEcEfrxYe0Fm9QtoxDrOpLvGsfzjowwybULlWT9Uz4XxV4RmOIAnRuLdgRFUu1LPU5Vwk3UGivRrPrxnk7083w==",
+  "saved_search_container": "saved_standards_uat",
+  "trace_files_container": "trace_files_uat",
+  "trace_results_container": "trace_results_uat",
+  "assessment_report_container": "assessment_report_uat",
+  "version": "uat",
+  "blob_connection_string": "DefaultEndpointsProtocol=https;AccountName=piplatformuat;AccountKey=ebHzWrP0wyXK6cFuK/BF/rgm3eNVQq+R8rzV/43exI4aSshPtv9cTkkc/5K/HAgWs6C/Jp8qo7EOngjPC4PDsg==;EndpointSuffix=core.windows.net",
+  "container_name_wordings": "pip-documents",
+  "container_name_documents": "tt-documents",
+  "azure_search_endpoint": "https://pip-search-poc.search.windows.net/",
+  "api_version": "?api-version=2019-05-06",
+  "api_key": "7E925C7961939FD6A57311C7B5E7FDD0",
+  "user_name": "policyuser_uat",
+  "password" : "nf2021uat"
+}

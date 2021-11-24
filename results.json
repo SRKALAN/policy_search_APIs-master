@@ -1,0 +1,16 @@
+{
+  "policyDetails": {
+    "policyNo": "98107865",
+    "expiryDate": "10/22/2020",
+    "effectiveDate": "10/22/2021"
+  },
+  "title": "Chubb Midmarket Liability Policy Wording (Chubb02-125-0218)",
+    "matchType": "partial",
+    "relevance": "High",
+    "refCode": "PDBI 01/01/2020",
+    "matches": {
+      "covered":{"results":[{"section":"section 1","content":"HTML String","relevance":"low"},{"section":"section 2","content":"HTML String","relevance":"moderate"}],"matchType":"Full"},
+     
+      "total": 75
+      }
+    }

@@ -1,0 +1,7 @@
+Notebook/
+__pycache__/
+test/
+.vscode
+out/
+1.json
+test.py

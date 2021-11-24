@@ -1,0 +1,10 @@
+diff a/utils.py b/utils.py	(rejected hunks)
+@@ -143,7 +143,7 @@
+ 
+                         #print('\nentered_fuzzy_match test',highlighted_text)
+                         score =Utils.fuzzy_score(search,ret_phrase)
+-                        # print(search,'.....',ret_phrase,'.....',score,'fuzzy\n\n\n')
++                        print(search,'.....',ret_phrase,'.....',score,'fuzzy\n\n\n')
+                         return highlighted_text,score
+ 
+         search=search.replace('"','').replace('(','').replace(')','').replace(';',' ').replace(':',' ')

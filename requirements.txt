@@ -1,0 +1,20 @@
+python-docx
+flask
+flask_cors
+PyMuPDF
+pdfminer.six
+requests
+numpy
+nltk==3.5
+scikit-learn
+azure-cosmos
+flask_httpauth
+PyJWT
+tika
+comtypes
+azure-storage-blob==12.6.0
+fuzzywuzzy
+rapidfuzz
+flasgger==0.9.5
+# python-Levenshtein
+python-Levenshtein-wheels
