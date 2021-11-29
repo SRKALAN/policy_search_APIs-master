@@ -35,5 +35,5 @@ jobs:
         with:
           app-name: 'FLASK-REST-API'
           slot-name: 'Production'
-          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_7FB57B7D2F834B18896F9C06AB201842 }}
+          publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_04FB52FDACA3499AA890F57058B521F4 }}
           package: '.\\app.zip'
