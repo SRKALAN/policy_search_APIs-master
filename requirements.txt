@@ -19,4 +19,4 @@ rapidfuzz
 flasgger==0.9.5
 # python-Levenshtein
 python-Levenshtein-wheels
-python-Levenshtein
+
